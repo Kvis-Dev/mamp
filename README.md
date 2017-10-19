@@ -13,10 +13,11 @@ This set of scripts is written to manage webserver on mac. It was inspired by de
 I want to create a set of scripts that woud do all the dirty job for you, because setting it all up is really annoying.
 
 ## features
+ - Uses brew to manage packages, so the size of this scripts is not very big.
 
 ## requirements
  - Python 3
- - (brew)[https://brew.sh/]
+ - [brew](https://brew.sh/)
 
 
 ## installation
