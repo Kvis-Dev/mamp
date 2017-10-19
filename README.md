@@ -25,14 +25,14 @@ Just clone this repository anywhere you want.
 
 ## usage
 
-sudo python3 main.py [start|stop|status|restart|wizard]
+`sudo python3 main.py [start|stop|status|restart|wizard]`
 
 
- * sudo python3 main.py start - starts all the services
- * sudo python3 main.py stop - stops all the services
- * sudo python3 main.py status - prints the status of all services
- * sudo python3 main.py restart - restarts all the services
- * sudo python3 main.py wizard - starts a wizard that helps you create a local domain. You just answer a few questions and voila! all done!
+ * `sudo python3 main.py start` - starts all the services
+ * `sudo python3 main.py stop` - stops all the services
+ * `sudo python3 main.py status` - prints the status of all services
+ * `sudo python3 main.py restart` - restarts all the services
+ * `sudo python3 main.py wizard` - starts a wizard that helps you create a local domain. You just answer a few questions and voila! all done!
 
 
 tags: mamp, free mamp, brew, nginx, web server
