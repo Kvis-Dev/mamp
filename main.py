@@ -1,4 +1,5 @@
-import sys, os
+import sys
+import os
 import argparse
 import shutil
 import getpass
@@ -6,7 +7,8 @@ import re
 import argparse
 
 from common.config import ROOT, HOME, USER, SERVER_ROOT
-from common.libs import STATUS_NOT_RUNNING, STATUS_BAD_RUNNING, STATUS_OK, Php70, Nginx, Mysql, ExternalServicePhp
+from common.libs import STATUS_NOT_RUNNING, STATUS_BAD_RUNNING, STATUS_OK, \
+    Php70, Nginx, Mysql, ExternalServicePhp, Apache2
 from helpers import exec, tpl, copytree, ask
 from distutils.dir_util import copy_tree
 
@@ -24,9 +26,11 @@ def create_paths():
         s.create_paths()
         s.copy_configs()
 
+
 def check_installs():
     if not os.geteuid() == 0:
-        print("need sudo to run this script, please, rerun with:\nsudo python3 {}".format(sys.argv[0]))
+        print("need sudo to run this script, please, rerun with:\nsudo python3 {}".format(
+            sys.argv[0]))
         sys.exit(1)
 
     checks, _ = exec("which brew".format(USER))
@@ -57,16 +61,19 @@ def status():
         if status_service == STATUS_NOT_RUNNING:
             color_print.red('{} not running'.format(str(s)))
 
+
 def start():
     for s in SERVICES:
         status_service = s.status()
         if status_service == STATUS_BAD_RUNNING:
-            color_print.blue('Service {} started from wrong config, restarting'.format(str(s)))
+            color_print.blue(
+                'Service {} started from wrong config, restarting'.format(str(s)))
             s.stop()
             s.start()
         if status_service == STATUS_NOT_RUNNING:
             color_print.blue('Starting {}'.format(str(s)))
             s.start()
+
 
 def stop():
     for s in SERVICES:
@@ -75,7 +82,8 @@ def stop():
             color_print.blue('Stopping {}'.format(str(s)))
             s.stop()
         if status_service == STATUS_BAD_RUNNING:
-            color_print.blue('Service {} started from wrong config, stopping'.format(str(s)))
+            color_print.blue(
+                'Service {} started from wrong config, stopping'.format(str(s)))
             s.stop()
             s.start()
 
@@ -92,7 +100,8 @@ def wizard():
 
     while True:
         server_name = input("Server name (e.g. facebook.local):\n")
-        re_res = re.match("^(([a-z0-9]\-*[a-z0-9]*){1,63}\.?){1,255}$", server_name)
+        re_res = re.match(
+            "^(([a-z0-9]\-*[a-z0-9]*){1,63}\.?){1,255}$", server_name)
         print(re_res)
         if re_res:
             print('Ok')
@@ -114,7 +123,8 @@ def wizard():
             break
 
     while True:
-        php_version = input("PHP version:\nAvailable versions:{}\n".format(', '.join(php_ver)))
+        php_version = input(
+            "PHP version:\nAvailable versions:{}\n".format(', '.join(php_ver)))
         if php_version in php_ver:
             break
     php_port = php_version.replace('.', '')
@@ -139,19 +149,22 @@ server {{
 }}""".format(server_name=server_name, docroot=fullpath, port=php_port)
     print("\n\n\n", template, "\n\n\n")
     if ask("Is this a correct config?"):
-        fin_file = "{}/etc/nginx/sites-enabled/{}".format(SERVER_ROOT,server_name)
+        fin_file = "{}/etc/nginx/sites-enabled/{}".format(
+            SERVER_ROOT, server_name)
         if os.path.exists(fin_file):
             i = 1
             while not os.path.exists("{}_{}".format(fin_file, i)):
                 i += 1
-            fin_file = "{}/etc/nginx/sites-enabled/{}_{}".format(SERVER_ROOT,server_name,i)
+            fin_file = "{}/etc/nginx/sites-enabled/{}_{}".format(
+                SERVER_ROOT, server_name, i)
 
         with open(fin_file, 'w') as f:
             f.write(template)
 
         print("You might want to restart server")
 
-if __name__ =='__main__':
+
+if __name__ == '__main__':
     check_installs()
     create_paths()
 

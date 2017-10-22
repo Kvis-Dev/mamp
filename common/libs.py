@@ -23,7 +23,42 @@ class ExternalServicePhp(ExternalService):
     def get_version(self):
         raise NotImplementedError
 
-class Nginx(ExternalService):
+
+class ExternalServiceWebserver(ExternalService):
+    def get_version(self):
+        raise NotImplementedError
+
+
+class Apache2(ExternalServiceWebserver):
+    def __str__(self):
+        return 'apache2'
+
+    def status(self):
+        status, _= exec('sudo pgrep -lf apache2')
+
+        for l in status:
+            if 'httpd -k start' in l:
+                return STATUS_OK
+
+    def start(self):
+        exec("sudo apachectl start -f /usr/local/apache2/conf/httpd.conf")
+
+    def stop(self):
+        exec("sudo apachectl stop")
+
+
+    def copy_configs(self):
+        pass
+
+
+    def get_is_installed(self):
+        out, _ = exec('readlink `which apachectl`')
+
+    def create_paths(self):
+        pass
+
+
+class Nginx(ExternalServiceWebserver):
     def __str__(self):
         return 'nginx'
 
